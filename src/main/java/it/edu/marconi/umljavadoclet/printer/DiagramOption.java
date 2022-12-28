@@ -1,23 +1,22 @@
-package info.leadinglight.umljavadoclet.printer;
+package it.edu.marconi.umljavadoclet.printer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DiagramOption {
     public DiagramOption(String name, int length) {
         this.name = name;
         this.length = length;
-        // No valid values / default options- free-form option.
         this.validValues = null;
         this.defaultValue = null;
     }
 
     public DiagramOption(String name, String validValues, String defaultValue, int length) {
         this.name = name;
-        // Valid values are separated by a comma.
         this.validValues = new ArrayList<>();
         String[] parts = validValues.split(",");
-        for (String part: parts) {
+        for (String part : parts) {
             this.validValues.add(part.trim());
         }
         this.defaultValue = defaultValue;
@@ -28,36 +27,16 @@ public class DiagramOption {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public List<String> getValidValues() {
         return validValues;
     }
 
     public boolean isValidValue(String value) {
-        return validValues != null ? validValues.contains(value) : true;
-    }
-
-    public void setValidValues(List<String> validValues) {
-        this.validValues = validValues;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
+        return validValues == null || validValues.contains(value);
     }
 
     public int getLength() {
         return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
     }
 
     public String getValue() {
@@ -69,9 +48,7 @@ public class DiagramOption {
         String value = getValue();
         if (value != null && value.length() > 0) {
             String[] parts = value.split(",");
-            for (String part: parts) {
-                values.add(part);
-            }
+            Collections.addAll(values, parts);
         }
         return values;
     }
@@ -85,7 +62,6 @@ public class DiagramOption {
                 }
             }
         } else {
-            // Free-form value.
             this.value = value;
         }
     }
@@ -93,17 +69,17 @@ public class DiagramOption {
     @Override
     public String toString() {
         return "DiagramOption{" +
-            "name='" + name + '\'' +
-            ", validValues=" + validValues +
-            ", defaultValue='" + defaultValue + '\'' +
-            ", length=" + length +
-            ", value='" + value + '\'' +
-            '}';
+                "name='" + name + '\'' +
+                ", validValues=" + validValues +
+                ", defaultValue='" + defaultValue + '\'' +
+                ", length=" + length +
+                ", value='" + value + '\'' +
+                '}';
     }
 
-    private String name;
-    private List<String> validValues;
-    private String defaultValue;
-    private int length;
+    private final String name;
+    private final List<String> validValues;
+    private final String defaultValue;
+    private final int length;
     private String value;
 }

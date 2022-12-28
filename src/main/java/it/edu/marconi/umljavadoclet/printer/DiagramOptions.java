@@ -1,37 +1,31 @@
-package info.leadinglight.umljavadoclet.printer;
+package it.edu.marconi.umljavadoclet.printer;
 
-import info.leadinglight.umljavadoclet.model.ModelClass;
+import it.edu.marconi.umljavadoclet.model.ModelClass;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * Handle options specific to uml-java-doclet.
- */
 public class DiagramOptions {
     public DiagramOptions() {
-        addOption(LINETYPE, "polyline,spline,ortho", "ortho", 2);
-        addOption(DEPENDENCIES, "public,protected,package,private", "public", 2);
-        addOption(PACKAGE_ORIENTATION, "left-to-right,top-to-bottom", "top-to-bottom", 2);
-        addOption(OUTPUT_MODEL, "true,false", "false", 2);
-        addOption(PUML_INCLUDE_FILE, 2);
-        addOption(EXCLUDE_CLASSES, 2);
-        addOption(EXCLUDE_PACKAGES, 2);
+        addOption(LINETYPE, "polyline,spline,ortho", "ortho");
+        addOption(DEPENDENCIES, "public,protected,package,private", "public");
+        addOption(OUTPUT_MODEL, "true,false", "false");
+        addOption(PUML_INCLUDE_FILE);
+        addOption(EXCLUDE_CLASSES);
+        addOption(EXCLUDE_PACKAGES);
     }
-
-    // Helpers for getting the value for a specific option
 
     private static final String LINETYPE = "linetype";
     private static final String DEPENDENCIES = "dependencies";
-    private static final String PACKAGE_ORIENTATION = "package-orientation";
     private static final String OUTPUT_MODEL = "output-model";
     private static final String PUML_INCLUDE_FILE = "puml-include-file";
     private static final String EXCLUDE_CLASSES = "exclude-classes";
     private static final String EXCLUDE_PACKAGES = "exclude-packages";
 
-    public enum LineType { SPLINE, POLYLINE, ORTHO };
-    public enum Visibility { PUBLIC, PROTECTED, PACKAGE, PRIVATE };
-    public enum Orientation { LEFT_TO_RIGHT, TOP_TO_BOTTOM };
+    public enum LineType {SPLINE, POLYLINE, ORTHO}
+
+    public enum Visibility {PUBLIC, PROTECTED, PACKAGE, PRIVATE}
 
     public LineType getLineType() {
         return LineType.valueOf(getOptionEnumValue(LINETYPE));
@@ -41,12 +35,8 @@ public class DiagramOptions {
         return Visibility.valueOf(getOptionEnumValue(DEPENDENCIES));
     }
 
-    public Orientation getPackageOrientation() {
-        return Orientation.valueOf(getOptionEnumValue(PACKAGE_ORIENTATION));
-    }
-
     public boolean isOutputModel() {
-        return getOptionValue(OUTPUT_MODEL).equals("true");
+        return Objects.equals(getOptionValue(OUTPUT_MODEL), "true");
     }
 
     public String getPumlIncludeFile() {
@@ -73,12 +63,6 @@ public class DiagramOptions {
         return getExcludedPackages().contains(modelClass.packageName());
     }
 
-    /**
-     * Set the options as provided in the strings.
-     * Invalid options are ignored.
-     * @param docletOptions Options provided in javadoc format for options: an array of string arrays, each
-     * array indicating the name of the option (index 0) and the associated value.
-     */
     public void set(String[][] docletOptions) {
         for (String[] docletOption : docletOptions) {
             String docletName = docletOption[0];
@@ -90,30 +74,15 @@ public class DiagramOptions {
         }
     }
 
-    /**
-     * Check to see if the specified option is valid.
-     * @param docletName Name of the option to check.
-     * @return Whether or not the option is valid.
-     */
     public boolean isValidOption(String docletName) {
         return getOptionForDocletName(docletName) != null;
     }
 
-    /**
-     * Get the number of parameters for the specified option.
-     * @param docletName Name of option to get parameters for.
-     * @return Number of parameters.
-     */
     public int getOptionLength(String docletName) {
         DiagramOption option = getOptionForDocletName(docletName);
         return option != null ? option.getLength() : 0;
     }
 
-    /**
-     * Check to see if the specified setting is a valid option.
-     * @param setting Setting to check.
-     * @return Error associated with the option, null if no error.
-     */
     public String checkOption(String[] setting) {
         String docletName = setting[0];
         DiagramOption option = getOptionForDocletName(docletName);
@@ -128,27 +97,25 @@ public class DiagramOptions {
     }
 
     public String getOptionValuesAsString() {
-        String result = "";
-        for (DiagramOption option: options) {
-            result += option.getName() + "=" + option.getValue() + " ";
+        StringBuilder result = new StringBuilder();
+        for (DiagramOption option : options) {
+            result.append(option.getName()).append("=").append(option.getValue()).append(" ");
         }
-        return result;
+        return result.toString();
     }
 
-    // Helpers
-
-    private void addOption(String name, int length) {
-        DiagramOption option = new DiagramOption(name, length);
+    private void addOption(String name) {
+        DiagramOption option = new DiagramOption(name, 2);
         options.add(option);
     }
 
-    private void addOption(String name, String validValues, String defaultValue, int length) {
-        DiagramOption option = new DiagramOption(name, validValues, defaultValue, length);
+    private void addOption(String name, String validValues, String defaultValue) {
+        DiagramOption option = new DiagramOption(name, validValues, defaultValue, 2);
         options.add(option);
     }
 
     private DiagramOption getOption(String name) {
-        for (DiagramOption option: options) {
+        for (DiagramOption option : options) {
             if (option.getName().equals(name)) {
                 return option;
             }
@@ -173,16 +140,15 @@ public class DiagramOptions {
 
     private String getOptionEnumValue(String name) {
         String value = getOptionValue(name);
-        // Any hyphens in the name are treated as _ in the enum value.
         return value != null ? value.toUpperCase().replace("-", "_") : null;
     }
 
     @Override
     public String toString() {
         return "DiagramOptions{" +
-            "options=" + options +
-            '}';
+                "options=" + options +
+                '}';
     }
 
-    private List<DiagramOption> options = new ArrayList<>();
+    private final List<DiagramOption> options = new ArrayList<>();
 }

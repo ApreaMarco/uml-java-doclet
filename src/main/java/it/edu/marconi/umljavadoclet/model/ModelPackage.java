@@ -1,12 +1,10 @@
-package info.leadinglight.umljavadoclet.model;
+package it.edu.marconi.umljavadoclet.model;
 
 import com.sun.javadoc.PackageDoc;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a package containing classes.
- */
 public class ModelPackage {
     public ModelPackage(Model model, PackageDoc packageDoc) {
         _model = model;
@@ -41,11 +39,6 @@ public class ModelPackage {
         return packageDoc.name();
     }
 
-    /**
-     * Is this package an immediate child package of the specified package?
-     * @param parentPackage Package to check.
-     * @return Whether or not it is a child package.
-     */
     public boolean isChildPackage(ModelPackage parentPackage) {
         if (parentPackage != this) {
             if (qualifiedName().startsWith(parentPackage.qualifiedName())) {
@@ -59,14 +52,12 @@ public class ModelPackage {
     }
 
     public String parentPackageFullName() {
-        if(qualifiedName().contains(".")){
+        if (qualifiedName().contains(".")) {
             return qualifiedName().substring(0, qualifiedName().lastIndexOf("."));
         } else {
             return qualifiedName();
         }
     }
-
-    // Update model
 
     public void addClass(ModelClass modelClass) {
         if (!_classes.contains(modelClass)) {
@@ -74,15 +65,12 @@ public class ModelPackage {
         }
     }
 
-    // Mapping
-
     private void mapRelationships() {
-        for (ModelClass modelClass: _classes) {
-            for (ModelRel rel: modelClass.relationships()) {
+        for (ModelClass modelClass : _classes) {
+            for (ModelRel rel : modelClass.relationships()) {
                 if (rel.source() == modelClass) {
                     ModelClass dest = rel.destination();
                     ModelPackage destPackage = dest.modelPackage();
-                    // Only packages that are included in the model are modelled.
                     if (destPackage != null) {
                         if (destPackage != this && !_dependencyPackages.contains(destPackage)) {
                             _dependencyPackages.add(destPackage);
@@ -91,7 +79,6 @@ public class ModelPackage {
                 } else {
                     ModelClass src = rel.source();
                     ModelPackage srcPackage = src.modelPackage();
-                    // Only packages that are included in the model are modelled.
                     if (srcPackage != null) {
                         if (srcPackage != this && !_dependentPackages.contains(srcPackage)) {
                             _dependentPackages.add(srcPackage);

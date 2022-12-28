@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>info.leadinglight</groupId>
+    <groupId>it.edu.marconi</groupId>
     <artifactId>uml-java-doclet</artifactId>
     <name>uml-java-doclet</name>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.0_1.2022.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,7 +23,7 @@
         <dependency>
             <groupId>net.sourceforge.plantuml</groupId>
             <artifactId>plantuml</artifactId>
-            <version>1.2020.4</version>
+            <version>1.2022.8</version>
         </dependency>
     </dependencies>
     <repositories>
@@ -34,20 +35,18 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
+                <version>3.10.1</version>
             </plugin>
-            <!-- Build jar with dependencies for usage with ant -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>info.leadinglight.umljavadoclet.UmlJavaDoclet</mainClass>
+                            <mainClass>it.edu.marconi.umljavadoclet.UmlJavaDoclet</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -55,22 +54,20 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
-            <!-- Generate UML diagrams in javadoc using doclet: mvn javadoc:javadoc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.4.1</version>
                 <configuration>
-                    <doclet>info.leadinglight.umljavadoclet.UmlJavaDoclet</doclet>
+                    <doclet>it.edu.marconi.umljavadoclet.UmlJavaDoclet</doclet>
                     <docletArtifact>
-                        <groupId>info.leadinglight</groupId>
+                        <groupId>it.edu.marconi</groupId>
                         <artifactId>uml-java-doclet</artifactId>
-                        <version>1.2-SNAPSHOT</version>
+                        <version>1.0_1.2022.8-SNAPSHOT</version>
                     </docletArtifact>
                     <useStandardDocletOptions>true</useStandardDocletOptions>
                     <additionalOptions>
                         <additionalOption>-output-model true</additionalOption>
-                        <!-- Specify each diagram option here as an additionOption tag. -->
                     </additionalOptions>
                 </configuration>
             </plugin>
